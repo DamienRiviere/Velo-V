@@ -5,6 +5,8 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
         <title>Vélo'V : Réservation de vélo sur la Ville de Lyon</title>
+        <link href="https://fonts.googleapis.com/css?family=Comfortaa" rel="stylesheet">
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
         <link rel="stylesheet" href="css/style.css">
     </head>
@@ -13,7 +15,7 @@
         <!-- Navbar -->
         <nav class="navbar navbar-expand-lg navbar-dark red-lighten-1 shadow-sm">
             <a class="navbar-brand" href="#">
-                <img src="images/logo_lyon.png" width="30" height="30" class="d-inline-block align-top" alt="">
+                <i class="fas fa-bicycle"></i>
                 Vélo'V
             </a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -34,21 +36,88 @@
                     <div id="map"></div>
                 </div>
                 <div class="col-3">
-                    
+                    <div id="section-form" class="card text-center my-3 ml-3 mr-3">
+                        <div class="card-header">
+                            <h4 id="station-title" class="mb-0"></h4>
+                        </div>
+                        <div class="card-body">
+                           <div class="col">
+                                <i class="fas fa-clock text-danger logo-form"></i>
+                                <p id="station-statut" class="mt-2 mb-0"></p>
+                           </div>
+                           <hr>
+                           <div class="col">
+                                <i class="fas fa-map-marker-alt text-danger logo-form"></i>
+                                <p id="station-street" class="mt-2 mb-0"></p>
+                           </div>
+                           <hr>
+                           <div class="col">
+                                <i class="fas fa-bicycle text-danger logo-form"></i>
+                                <p id="station-bike" class="mt-2 mb-0"></p>
+                           </div>
+                           <div id="section-reservation">
+                               <hr>
+                               <div class="col">
+                                    <i class="fas fa-edit text-danger logo-form"></i>
+                                    <p class="mb-0 mt-2">Signature</p>
+                                    <canvas id="canvas" style="height: 100px; width: 310px;"></canvas>
+                               </div>
+                           </div>
+                        </div>
+                        <div id="form-footer" class="card-footer text-muted">
+                            <a href="#" id="button-reservation" class="btn btn-outline-primary btn-sm font-weight-bold">Réserver</a>
+                            <a href="#" id="reservation-success" class="btn btn-outline-success btn-sm font-weight-bold">Valider</a>
+                            <a href="#" id="canvas-delete" class="btn btn-outline-danger btn-sm font-weight-bold">Effacer</a>
+                        </div>
+                    </div>
+
+                    <div id="alert-form" class="alert alert-warning my-3 ml-3 mr-3" role="alert">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        Veuillez sélectionner une station !
+                    </div>
+
+                    <div id="map-legend" class="card my-3 ml-3 mr-3">
+                        <div class="card-header text-center">
+                            <h4 class="mb-0">Légende</h4>
+                        </div>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">
+                                <img src="http://maps.google.com/mapfiles/ms/icons/blue-dot.png" alt="Marker bleu">
+                                Stations disposant de plusieurs Vélibs
+                            </li>
+                            <li class="list-group-item">
+                                <img src="http://maps.google.com/mapfiles/ms/icons/red-dot.png" alt="Marker rouge">
+                                Stations n'ayant plus aucun Vélib
+                            </li>
+                            <li class="list-group-item">
+                                <div class="row">
+                                    <div class="col-4">
+                                        <img src="https://raw.githubusercontent.com/googlemaps/v3-utility-library/master/markerclusterer/images/m2.png" alt="Cercle jaune">
+                                        <img src="https://raw.githubusercontent.com/googlemaps/v3-utility-library/master/markerclusterer/images/m1.png" alt="Cercle bleu"> 
+                                    </div>
+                                    <div class="col-8">
+                                        Regroupement de stations suivant leur nombre
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
                 </div>                
-            </div>
+            </div>           
         </div>
         
         <!-- Footer -->
         <footer class="red-lighten-1">
-            <div class="text-center py-3 text-white">© 2018 Copyright:
-                <a href="http://d-riviere.fr">d-riviere.fr</a>
+            <div class="text-center py-2 text-white">© 2018 Copyright:
+                <a href="http://d-riviere.fr" class="text-white">d-riviere.fr</a>
             </div>
         </footer>
          
         <script src="js/ajax.js"></script>
         <script src="js/map.js"></script>
         <script src="js/marker.js"></script>
+        <script src="js/form.js"></script>
+        <script src="js/canvas.js"></script>
         <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDGSL7-UbefqLNVVfl7j9KrQnixW3d_-dE" async defer></script>
         <script src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js"></script>
         <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
