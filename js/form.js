@@ -1,7 +1,9 @@
 const form = {
     buttonReservation: document.getElementById("button-reservation"),
     reservationSuccessButton: document.getElementById("reservation-success"),
+    buttonReservationDelete: document.getElementById("delete-reservation"),
     x: null,
+    stationName: null,
 
     /**
      * Permet d'afficher une réservation
@@ -16,36 +18,38 @@ const form = {
     },
 
     /**
-     * Permet de gérer les évènements du bouton pour valider une réservation
+     * Permet valider la réservation
      */
-    reservationSuccess() {
+    reservationSuccess(station) {
         this.reservationSuccessButton.addEventListener("click", function() {
-            const reservationSuccess = document.createElement("div");
-            reservationSuccess.classList.add("col", "py-5");
-            reservationSuccess.innerHTML =
-            `
-            <div class="container">
-                <div class="alert alert-success" role="alert">
-                    <h4 class="alert-heading">Votre réservation est validée !</h4>
-                    <p id="reservation-timer"></p>
-                    <hr>
-                    <p class="mb-0">Vous pouvez annuler votre réservation en cliquant sur la bouton <span class="font-weight-bold text-danger">"Annuler la réservation"</span> ci-dessous.</p>
-                </div>
-                <div class="col text-center">
-                    <a href="#" class="btn btn-danger font-weight-bold">Annuler la réservation</a>
-                </div>
-            </div>
-            `;
-            document.getElementsByClassName("container-fluid")[0].appendChild(reservationSuccess);
-            document.getElementById("reservation-success").style.display = "none";
+            // Pour recommencer à 0 le décompte si l'on réserve un vélib sur une autre station
+            clearInterval(form.x);
 
+            const alertForm = document.getElementById("alert-form");
+
+            sessionStorage.setItem("name", station);
+
+            document.getElementById("reservation-success").style.display = "none";
+            createCanvas.context.clearRect(0, 0, canvas.width, canvas.height);
+            document.getElementById("section-form").style.display = "none";
+            alertForm.style.display = "block";
+            alertForm.innerHTML = `
+                <i class="fas fa-exclamation-triangle"></i>
+                Si vous voulez réserver un autre Vélib à une autre station, <span class="font-weight-bold">veuillez annuler la réservation en cours</span>.
+            `;
+            alertForm.classList.add("alert-danger");
+            alertForm.classList.remove("alert-warning");
+            document.getElementById("map-legend").style.display = "block";
+
+            // On déclenche le décompte de la réservation
             form.reservationTimer();
         });
     },
 
     
     /**
-     * Permet d'initialiser le décompte à chaque réservation
+     * Permet d'initialiser le décompte à chaque réservation et gère le container de réservation
+     * 
      * @param {*} dateEnCours 
      */
     reservationTimer(dateEnCours) {
@@ -55,14 +59,18 @@ const form = {
         // On utilise la valeur "dateEnCours" dans la variable "dateFin"
         if(dateEnCours) {
             dateFin = new Date().getTime() + Number(dateEnCours);
-        }
-        // Si dateEnCours est vide on stocke la date actuel + 20 minutes
-        else {
+         // Si dateEnCours est vide on stocke la date actuel + 20 minutes
+        } else { 
             dateFin = new Date().getTime() + 1200000; // 1 200 000 = 20 minutes en millisecondes
         }
 
         // On utilise la méthode setInterval pour répéter la fonction
         form.x = setInterval(function () {
+            const reservationTitle = document.getElementById("reservation-title");
+            const reservationTimer =  document.getElementById("reservation-timer");
+            const reservationDelete = document.getElementById("delete-reservation");
+            const reservationContainer = document.getElementById("reservation-container");
+            const alertForm = document.getElementById("alert-form");
 
             const dateActuel = new Date().getTime();
             const distance = dateFin - dateActuel;
@@ -71,28 +79,80 @@ const form = {
             let minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
             let secondes = Math.floor((distance % (1000 * 60)) / 1000);
             
-            document.getElementById("reservation-timer").innerHTML = `Vous avez réservé 1 vélib à la staion 12001 - LA SOIE. Votre réservation expire dans : <span class="font-weight-bold">${minutes} minute(s) et ${secondes} seconde(s)</span>.`
-            
             // On stock la date actuel en milliseconde
             sessionStorage.setItem("temps", distance);
 
-            // Si le décompte arrive à 0, la réservation expire
-            // if (distance < 0) {
-            //     $("#text_reservation").text ("Votre réservation a expirée.");
-            //     $("#text_decompte").hide(0);
-            //     buttonForm.annulationReserv.hide(0);
-            //     $("#reservation").css({ // Un nouveau style est appliqué sur le footer de réservation
-            //         color: "#3D4D65",
-            //         fontWeight: 600,
-            //         border: "1px solid #0081D5",
-            //         backgroundColor: "rgba(0, 129, 213, 0.2)",
-            //     });
-            //     // Si la réservation expire, on vide le session storage
-            //     sessionStorage.clear();
-            // }
+            // Gestion du container de la réservation
+            reservationContainer.classList.add("alert-success");
+            reservationContainer.classList.remove("alert-secondary");
+            reservationContainer.classList.remove("alert-danger");
+            reservationTitle.classList.remove("text-center", "mb-0");
+            reservationTimer.style.display = "block";
+            reservationDelete.style.display = "inline-block";
+            reservationTitle.textContent = " Votre réservation est validée !";
+            reservationTimer.innerHTML = `Vous avez réservé 1 vélib à la station <span class="font-weight-bold">${sessionStorage.name}</span>. <br> Expire dans : <span class="font-weight-bold">${minutes} minute(s) et ${secondes} seconde(s)</span>.`
+
+           // Si le décompte arrive à 0, la réservation expire
+            if (distance < 0) {
+                reservationContainer.classList.remove("alert-success");
+                reservationContainer.classList.add("alert-danger");
+                reservationTitle.textContent = "Votre réservation a expiré !";
+                reservationTitle.classList.add("text-center", "mb-0");
+                reservationTimer.style.display = "none";
+                reservationDelete.style.display = "none";
+                alertForm.innerHTML = `
+                    <i class="fas fa-exclamation-triangle"></i>
+                    Veuillez sélectionner une station !
+                `;
+                alertForm.classList.add("alert-warning");
+                alertForm.classList.remove("alert-danger");
+            }
                 
         });
             
     },
+
+    /**
+     * Permet d'annuler une réservation
+     */
+    deleteReservation() {
+        this.buttonReservationDelete.addEventListener("click", function() {
+            const reservationTitle = document.getElementById("reservation-title");
+            const reservationTimer =  document.getElementById("reservation-timer");
+            const reservationDelete = document.getElementById("delete-reservation");
+            const reservationContainer = document.getElementById("reservation-container");
+            const alertForm = document.getElementById("alert-form");
+
+            reservationContainer.classList.remove("alert-success");
+            reservationContainer.classList.add("alert-danger");
+            reservationTitle.textContent = "Votre réservation est annulée !";
+            reservationTitle.classList.add("text-center", "mb-0");
+            reservationTimer.style.display = "none";
+            reservationDelete.style.display = "none";
+            alertForm.innerHTML = `
+                <i class="fas fa-exclamation-triangle"></i>
+                Veuillez sélectionner une station !
+            `;
+            alertForm.classList.add("alert-warning");
+            alertForm.classList.remove("alert-danger");
+
+            clearInterval(form.x);
+            sessionStorage.clear();
+        });
+    },
+
+    /**
+     * Gestion du webStorage si il y a une réservation en cours
+     */
+    webStorage() {
+        // On stock la date du session storage dans une variable
+        let dateEnCours = sessionStorage.getItem("temps");
+
+        // Si la valeur de "temps" est supérieur à 0, on reprends la réservation en cours
+        if (dateEnCours > 0 ) {    
+            // On relance le timer avec la date à laquelle elle s'est arrêté
+            form.reservationTimer(dateEnCours);
+        }
+    }
 
 }

@@ -9,4 +9,8 @@ window.onload = function() {
     createCanvas.initCanvas();
     // Valide la réservation et l'affiche
     form.reservationSuccess();
+    // Annulation de la réservation
+    form.deleteReservation();
+    // Vérification qu'une réservation soit en cours
+    form.webStorage();
 };

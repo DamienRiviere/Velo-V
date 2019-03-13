@@ -4,7 +4,10 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
-        <title>Vélo'V : Réservation de vélo sur la Ville de Lyon</title>
+        <meta name="description" content="Velo'V : l'application de réservation de vélib(s) sur la ville de Lyon !">
+        <title>Vélo'V : Réservation de Vélib sur la Ville de Lyon</title>
+        
+        <!-- Style -->
         <link href="https://fonts.googleapis.com/css?family=Comfortaa" rel="stylesheet">
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
@@ -26,35 +29,48 @@
                     <li class="nav-item">
                         <a class="nav-link" href="#">Comment ça marche ?</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Réserver son Vélib !</a>
+                    </li>
                 </ul>
             </div>
         </nav>
 
         <div class="container-fluid">
             <div class="row">
-                <div class="col-9">
+
+                <!-- Google Map -->
+                <div class="col-lg-8 col-md-12">
                     <div id="map"></div>
                 </div>
-                <div class="col-3">
+
+                <!-- Formulaire d'une station -->
+                <div class="col-lg-4 col-md-12 bg-light">
                     <div id="section-form" class="card text-center my-3 ml-3 mr-3">
+                        <!-- Nom de la station -->
                         <div class="card-header">
                             <h4 id="station-title" class="mb-0"></h4>
                         </div>
+
                         <div class="card-body">
+                            <!-- Statut de la station : OUVERT/FERMER -->
                            <div class="col">
                                 <i class="fas fa-clock text-danger logo-form"></i>
                                 <p id="station-statut" class="mt-2 mb-0"></p>
                            </div>
                            <hr>
+                           <!-- Rue de la station -->
                            <div class="col">
                                 <i class="fas fa-map-marker-alt text-danger logo-form"></i>
                                 <p id="station-street" class="mt-2 mb-0"></p>
                            </div>
                            <hr>
+                           <!-- Nombre de Vélibs disponibles -->
                            <div class="col">
                                 <i class="fas fa-bicycle text-danger logo-form"></i>
                                 <p id="station-bike" class="mt-2 mb-0"></p>
                            </div>
+                           <!-- Section pour réserver son vélib -->
                            <div id="section-reservation">
                                <hr>
                                <div class="col">
@@ -64,6 +80,8 @@
                                </div>
                            </div>
                         </div>
+
+                        <!-- Liste des boutons du formulaire -->
                         <div id="form-footer" class="card-footer text-muted">
                             <a href="#" id="button-reservation" class="btn btn-outline-primary btn-sm font-weight-bold">Réserver</a>
                             <a href="#" id="reservation-success" class="btn btn-outline-success btn-sm font-weight-bold">Valider</a>
@@ -71,44 +89,61 @@
                         </div>
                     </div>
 
+                    <!-- Message d'alerte -->
                     <div id="alert-form" class="alert alert-warning my-3 ml-3 mr-3" role="alert">
                         <i class="fas fa-exclamation-triangle"></i>
                         Veuillez sélectionner une station !
                     </div>
 
+                    <!-- Légende de la carte -->
                     <div id="map-legend" class="card my-3 ml-3 mr-3">
                         <div class="card-header text-center">
                             <h4 class="mb-0">Légende</h4>
                         </div>
+
                         <ul class="list-group list-group-flush">
                             <li class="list-group-item">
                                 <img src="http://maps.google.com/mapfiles/ms/icons/blue-dot.png" alt="Marker bleu">
                                 Stations disposant de plusieurs Vélibs
                             </li>
+
                             <li class="list-group-item">
                                 <img src="http://maps.google.com/mapfiles/ms/icons/red-dot.png" alt="Marker rouge">
                                 Stations n'ayant plus aucun Vélib
                             </li>
+
                             <li class="list-group-item">
                                 <div class="row">
-                                    <div class="col-4">
+                                    <div class="col-3">
                                         <img src="https://raw.githubusercontent.com/googlemaps/v3-utility-library/master/markerclusterer/images/m2.png" alt="Cercle jaune">
                                         <img src="https://raw.githubusercontent.com/googlemaps/v3-utility-library/master/markerclusterer/images/m1.png" alt="Cercle bleu"> 
                                     </div>
-                                    <div class="col-8">
+                                    <div class="col-9">
                                         Regroupement de stations suivant leur nombre
                                     </div>
                                 </div>
                             </li>
                         </ul>
                     </div>
+
+                    <!-- Section ou apparait la réservation en cours -->
+                    <div class="container">
+                        <div id="reservation-container" class="alert alert-secondary" role="alert">
+                            <h4 id="reservation-title" class="alert-heading text-center">Aucune réservation en cours</h4>
+                            <p id="reservation-timer"></p>
+                        </div>
+                        <div class="col text-center mb-3">
+                            <a href="#" id="delete-reservation" class="btn btn-danger font-weight-bold">Annuler la réservation</a>
+                        </div>
+                    </div>   
                 </div>                
-            </div>           
+            </div>    
+              
         </div>
-        
+
         <!-- Footer -->
         <footer class="red-lighten-1">
-            <div class="text-center py-2 text-white">© 2018 Copyright:
+            <div class="text-center py-2 text-white">© 2019 Copyright:
                 <a href="http://d-riviere.fr" class="text-white">d-riviere.fr</a>
             </div>
         </footer>
