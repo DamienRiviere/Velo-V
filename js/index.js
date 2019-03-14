@@ -13,4 +13,6 @@ window.onload = function() {
     form.deleteReservation();
     // Vérification qu'une réservation soit en cours
     form.webStorage();
+    // Scrolling
+    scroll();
 };
