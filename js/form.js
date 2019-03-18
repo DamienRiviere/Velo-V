@@ -1,52 +1,57 @@
 const form = {
-    buttonReservation: document.getElementById("button-reservation"),
-    reservationSuccessButton: document.getElementById("reservation-success"),
-    buttonReservationDelete: document.getElementById("delete-reservation"),
+    buttonReservation: document.getElementById("button-reservation"), // Bouton pour faire apparaître le formulaire de réservation
+    buttonReservationSuccess: document.getElementById("reservation-success"), // Bouton pour valider la réservation
+    buttonReservationDelete: document.getElementById("delete-reservation"), // Bouton pour annuler la réservation en cours
+    mapLegend: document.getElementById("map-legend"), // Légende de la carte
+    sectionReservation: document.getElementById("section-reservation"), // Section de la réservation
+    canvasClean: document.getElementById("canvas-delete"), // Bouton pour nettoyer le canvas
+    alertForm: document.getElementById("alert-form"), // Message d'alerte suivant la situation
+    sectionForm: document.getElementById("section-form"), // La section entière d'une réservation
+    reservationTitle: document.getElementById("reservation-title"), // Titre de la réservation en cours
+    reservationTime: document.getElementById("reservation-timer"), // Temps de la réservation en cours
+    reservationContainer: document.getElementById("reservation-container"), // Container de la réservation en cours
     x: null,
-    stationName: null,
 
     /**
      * Permet d'afficher une réservation
      */
     showReservation() {
         this.buttonReservation.addEventListener("click", function() {
-            document.getElementById("section-reservation").style.display = "block";
-            document.getElementById("map-legend").style.display = "none";
-            document.getElementById("button-reservation").style.display = "none";
-            document.getElementById("canvas-delete").style.display = "inline-block";
+            form.sectionReservation.style.display = "block";
+            form.mapLegend.style.display = "none";
+            form.buttonReservation.style.display = "none";
+            form.canvasClean.style.display = "inline-block";
         });
     },
 
     /**
-     * Permet valider la réservation
+     * Permet valider la réservation et de lancer le timer
      */
     reservationSuccess(station) {
-        this.reservationSuccessButton.addEventListener("click", function() {
+        this.buttonReservationSuccess.addEventListener("click", function() {
             // Pour recommencer à 0 le décompte si l'on réserve un vélib sur une autre station
             clearInterval(form.x);
-
-            const alertForm = document.getElementById("alert-form");
+            createCanvas.context.clearRect(0, 0, canvas.width, canvas.height);
 
             sessionStorage.setItem("name", station);
 
-            document.getElementById("reservation-success").style.display = "none";
-            createCanvas.context.clearRect(0, 0, canvas.width, canvas.height);
-            document.getElementById("section-form").style.display = "none";
-            alertForm.style.display = "block";
-            alertForm.innerHTML = `
+            // Gestion des différents éléments
+            form.buttonReservationSuccess.style.display = "none";
+            form.sectionForm.style.display = "none";
+            form.alertForm.style.display = "block";
+            form.alertForm.innerHTML = `
                 <i class="fas fa-exclamation-triangle"></i>
                 Si vous voulez réserver un autre Vélib à une autre station, <span class="font-weight-bold">veuillez annuler la réservation en cours</span>.
             `;
-            alertForm.classList.add("alert-danger");
-            alertForm.classList.remove("alert-warning");
-            document.getElementById("map-legend").style.display = "block";
+            form.alertForm.classList.add("alert-danger");
+            form.alertForm.classList.remove("alert-warning");
+            form.mapLegend.style.display = "block";
 
             // On déclenche le décompte de la réservation
             form.reservationTimer();
         });
     },
 
-    
     /**
      * Permet d'initialiser le décompte à chaque réservation et gère le container de réservation
      * 
@@ -65,13 +70,7 @@ const form = {
         }
 
         // On utilise la méthode setInterval pour répéter la fonction
-        form.x = setInterval(function () {
-            const reservationTitle = document.getElementById("reservation-title");
-            const reservationTimer =  document.getElementById("reservation-timer");
-            const reservationDelete = document.getElementById("delete-reservation");
-            const reservationContainer = document.getElementById("reservation-container");
-            const alertForm = document.getElementById("alert-form");
-
+        this.x = setInterval(function () {
             const dateActuel = new Date().getTime();
             const distance = dateFin - dateActuel;
 
@@ -82,34 +81,30 @@ const form = {
             // On stock la date actuel en milliseconde
             sessionStorage.setItem("temps", distance);
 
-            // Gestion du container de la réservation
-            reservationContainer.classList.add("alert-success");
-            reservationContainer.classList.remove("alert-secondary");
-            reservationContainer.classList.remove("alert-danger");
-            reservationTitle.classList.remove("text-center", "mb-0");
-            reservationTimer.style.display = "block";
-            reservationDelete.style.display = "inline-block";
-            reservationTitle.textContent = " Votre réservation est validée !";
-            reservationTimer.innerHTML = `Vous avez réservé 1 vélib à la station <span class="font-weight-bold">${sessionStorage.name}</span>. <br> Expire dans : <span class="font-weight-bold">${minutes} minute(s) et ${secondes} seconde(s)</span>.`
+            // Permet d'afficher la réservation dans le container de la réservation en cours
+            form.reservationSuccessDisplay(minutes, secondes);
 
            // Si le décompte arrive à 0, la réservation expire
             if (distance < 0) {
-                reservationContainer.classList.remove("alert-success");
-                reservationContainer.classList.add("alert-danger");
-                reservationTitle.textContent = "Votre réservation a expiré !";
-                reservationTitle.classList.add("text-center", "mb-0");
-                reservationTimer.style.display = "none";
-                reservationDelete.style.display = "none";
-                alertForm.innerHTML = `
-                    <i class="fas fa-exclamation-triangle"></i>
-                    Veuillez sélectionner une station !
-                `;
-                alertForm.classList.add("alert-warning");
-                alertForm.classList.remove("alert-danger");
+                form.expiredReservation();
             }
-                
         });
-            
+    },
+
+    /**
+     * Gestion de l'affichage du container de réservation une fois le décompte lancer
+     * @param {*} minutes 
+     * @param {*} secondes 
+     */
+    reservationSuccessDisplay(minutes, secondes) {
+        form.reservationContainer.classList.add("alert-success");
+        form.reservationContainer.classList.remove("alert-secondary");
+        form.reservationContainer.classList.remove("alert-danger");
+        form.reservationTitle.classList.remove("text-center", "mb-0");
+        form.reservationTime.style.display = "block";
+        form.buttonReservationDelete.style.display = "inline-block";
+        form.reservationTitle.textContent = " Votre réservation est validée !";
+        form.reservationTime.innerHTML = `Vous avez réservé 1 vélib à la station <span class="font-weight-bold">${sessionStorage.name}</span>. <br> Expire dans : <span class="font-weight-bold">${minutes} minute(s) et ${secondes} seconde(s)</span>.`
     },
 
     /**
@@ -117,28 +112,43 @@ const form = {
      */
     deleteReservation() {
         this.buttonReservationDelete.addEventListener("click", function() {
-            const reservationTitle = document.getElementById("reservation-title");
-            const reservationTimer =  document.getElementById("reservation-timer");
-            const reservationDelete = document.getElementById("delete-reservation");
-            const reservationContainer = document.getElementById("reservation-container");
-            const alertForm = document.getElementById("alert-form");
-
-            reservationContainer.classList.remove("alert-success");
-            reservationContainer.classList.add("alert-danger");
-            reservationTitle.textContent = "Votre réservation est annulée !";
-            reservationTitle.classList.add("text-center", "mb-0");
-            reservationTimer.style.display = "none";
-            reservationDelete.style.display = "none";
-            alertForm.innerHTML = `
+            form.reservationContainer.classList.remove("alert-success");
+            form.reservationContainer.classList.add("alert-danger");
+            form.reservationTitle.textContent = "Votre réservation est annulée !";
+            form.reservationTitle.classList.add("text-center", "mb-0");
+            form.reservationTime.style.display = "none";
+            form.buttonReservationDelete.style.display = "none";
+            form.alertForm.innerHTML = `
                 <i class="fas fa-exclamation-triangle"></i>
                 Veuillez sélectionner une station !
             `;
-            alertForm.classList.add("alert-warning");
-            alertForm.classList.remove("alert-danger");
+            form.alertForm.classList.add("alert-warning");
+            form.alertForm.classList.remove("alert-danger");
 
             clearInterval(form.x);
             sessionStorage.clear();
         });
+    },
+
+    /**
+     * Gestion de l'affichage à l'expiration de la réservation
+     */
+    expiredReservation() {
+        form.reservationContainer.classList.remove("alert-success");
+        form.reservationContainer.classList.add("alert-danger");
+        form.reservationTitle.textContent = "Votre réservation a expiré !";
+        form.reservationTitle.classList.add("text-center", "mb-0");
+        form.reservationTime.style.display = "none";
+        form.buttonReservationDelete.style.display = "none";
+        form.alertForm.innerHTML = `
+            <i class="fas fa-exclamation-triangle"></i>
+            Veuillez sélectionner une station !
+        `;
+        form.alertForm.classList.add("alert-warning");
+        form.alertForm.classList.remove("alert-danger");
+
+        clearInterval(form.x);
+        sessionStorage.clear();
     },
 
     /**

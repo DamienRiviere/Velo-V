@@ -6,7 +6,10 @@ const markerManager = {
     iconNotAvailable: {
         url: "http://maps.google.com/mapfiles/ms/icons/red-dot.png",
     },
-    
+    stationStatut: document.getElementById("station-statut"),
+    stationBike: document.getElementById("station-bike"),
+    formFooter: document.getElementById("form-footer"),
+   
     /**
      * Permet de créer les markers
      * @param {} station 
@@ -61,35 +64,47 @@ const markerManager = {
                 document.getElementById("button-reservation").style.display = "inline-block";
                 document.getElementById("station-title").textContent = station.name;
                 document.getElementById("station-street").textContent = station.address;
-                const stationStatut =  document.getElementById("station-statut");
-                const stationBike = document.getElementById("station-bike");
-                const formFooter = document.getElementById("form-footer");
-                    
-                form.reservationSuccess(station.name);
+                        
+                // Gestion de l'affichage du statut de la station (OUVERT/FERMER)
+                markerManager.showStatut(station);
+                // Gestion de l'affichage des vélibs en fonction de leur nombre
+                markerManager.showAvailableBike(station);
                 
-                // Permet de traduire en français le statut de la station
-                if(station.status === "OPEN") {
-                    stationStatut.textContent = "OUVERTE";
-                    stationStatut.classList.add("text-success", "font-weight-bold");
-                } else {
-                    stationStatut.textContent = "FERMER";
-                    stationStatut.classList.add("text-danger", "font-weight-bold");
-                }
-                
-                // Permet d'afficher ou de cacher des éléments en fonction du nombre de vélibs
-                if(station.available_bikes > 0) {
-                    stationBike.textContent = `${station.available_bikes} vélib(s) disponibles.`;
-                    stationBike.classList.remove("text-danger");
-                    stationBike.classList.add("text-success", "font-weight-bold");
-                    formFooter.style.display = "block";
-                } else {
-                    stationBike.textContent = `${station.available_bikes} vélib disponible.`;
-                    stationBike.classList.remove("text-success");
-                    stationBike.classList.add("text-danger", "font-weight-bold");
-                    formFooter.style.display = "none";
-                }         
+                form.reservationSuccess(station.name);   
             }  
         });
     },
+
+    /**
+     * Permet de traduire en français le statut de la station
+     * @param {*} station 
+     */
+    showStatut(station) {
+        if(station.status === "OPEN") {
+            this.stationStatut.textContent = "OUVERTE";
+            this.stationStatut.classList.add("text-success", "font-weight-bold");
+        } else {
+            this.stationStatut.textContent = "FERMER";
+            this.stationStatut.classList.add("text-danger", "font-weight-bold");
+        }
+    },
+
+    /**
+     * Permet d'afficher ou de cacher des éléments en fonction du nombre de vélibs
+     * @param {*} station 
+     */
+    showAvailableBike(station) {
+        if(station.available_bikes > 0) {
+            this.stationBike.textContent = `${station.available_bikes} vélib(s) disponibles.`;
+            this.stationBike.classList.remove("text-danger");
+            this.stationBike.classList.add("text-success", "font-weight-bold");
+            this.formFooter.style.display = "block";
+        } else {
+            this.stationBike.textContent = `${station.available_bikes} vélib disponible.`;
+            this.stationBike.classList.remove("text-success");
+            this.stationBike.classList.add("text-danger", "font-weight-bold");
+            this.formFooter.style.display = "none";
+        }   
+    }
 
 }
