@@ -105,3 +105,5 @@ const createCanvas = {
         });
     }
 }
+
+export {createCanvas};

@@ -1,3 +1,8 @@
+import {googleMaps} from "./map.js";
+import {form} from "./form.js";
+import {createCanvas} from "./canvas.js";
+import {scroll} from "./scroll.js";
+
 window.onload = function() {
     // Initialise la map
     googleMaps.initMap(); 

@@ -1,3 +1,5 @@
+import {createCanvas} from "./canvas.js";
+
 const form = {
     buttonReservation: document.getElementById("button-reservation"), // Bouton pour faire apparaître le formulaire de réservation
     buttonReservationSuccess: document.getElementById("reservation-success"), // Bouton pour valider la réservation
@@ -166,3 +168,5 @@ const form = {
     }
 
 }
+
+export {form};

@@ -1,3 +1,7 @@
+import {googleMaps} from "./map.js";
+import {createCanvas} from "./canvas.js";
+import {form} from "./form.js";
+
 const markerManager = {
     markers: [],
     iconAvailable: {
@@ -108,3 +112,5 @@ const markerManager = {
     }
 
 }
+
+export {markerManager};

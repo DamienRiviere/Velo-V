@@ -1,3 +1,6 @@
+import {ajaxGet} from "./ajax.js";
+import {markerManager} from "./marker.js";
+
 const googleMaps = {  
     url: "https://api.jcdecaux.com/vls/v1/stations?contract=lyon&apiKey=6ea6ca28e94413eeea15087de90e12a2462343c5",
     map,
@@ -57,6 +60,8 @@ const googleMaps = {
             this.alertForm.classList.add("alert-danger");
             this.alertForm.classList.remove("alert-warning");
         }
-    }
+    },
 
 };
+
+export {googleMaps};

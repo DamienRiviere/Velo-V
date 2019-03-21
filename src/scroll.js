@@ -10,3 +10,5 @@ function scroll() {
             y = document.documentElement.scrollTop;
     });
 }
+
+export {scroll};
