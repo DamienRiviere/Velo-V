@@ -9,6 +9,7 @@ const googleMaps = {
     modalReservation: document.getElementById("modal-reservation"),
     reservationTitle: document.getElementById("reservation-title"),
     alertForm: document.getElementById("alert-form"),
+    buttonResetMap: document.getElementById("reset-map"),
 
     /**
      * Permet d'initialiser la carte
@@ -20,6 +21,7 @@ const googleMaps = {
         });
 
         this.initReservation();
+        this.resetMap();
     },
 
     /**
@@ -61,6 +63,17 @@ const googleMaps = {
             this.alertForm.classList.remove("alert-warning");
         }
     },
+
+    /**
+     * Permet de réinitialiser la map à ses coordonnées d'origine
+     */
+    resetMap() {
+        this.buttonResetMap.addEventListener(("click"), () => {
+            googleMaps.map.setZoom(13);
+            googleMaps.map.setCenter({lat: 45.764043, lng: 4.835659});
+        });
+    }
+
 
 };
 

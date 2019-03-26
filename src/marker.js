@@ -51,7 +51,7 @@ const markerManager = {
      * Permet d'afficher les informations de la station quand l'on clique sur son marker
      */
     showStation(station) {
-        markerManager.marker.addListener("click", function() {
+        markerManager.marker.addListener("click", () => {
             googleMaps.map.panTo(station.position);
             googleMaps.map.setZoom(17);
         

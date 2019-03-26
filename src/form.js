@@ -19,7 +19,7 @@ const form = {
      * Permet d'afficher une réservation
      */
     showReservation() {
-        this.buttonReservation.addEventListener("click", function() {
+        this.buttonReservation.addEventListener("click", () => {
             form.sectionReservation.style.display = "block";
             form.mapLegend.style.display = "none";
             form.buttonReservation.style.display = "none";
@@ -31,7 +31,7 @@ const form = {
      * Permet valider la réservation et de lancer le timer
      */
     reservationSuccess(station) {
-        this.buttonReservationSuccess.addEventListener("click", function() {
+        this.buttonReservationSuccess.addEventListener("click", () => {
             // Pour recommencer à 0 le décompte si l'on réserve un vélib sur une autre station
             clearInterval(form.x);
             createCanvas.context.clearRect(0, 0, canvas.width, canvas.height);
@@ -73,7 +73,7 @@ const form = {
         }
 
         // On utilise la méthode setInterval pour répéter la fonction
-        this.x = setInterval(function () {
+        this.x = setInterval(() => {
             const dateActuel = new Date().getTime();
             const distance = dateFin - dateActuel;
 
@@ -114,7 +114,7 @@ const form = {
      * Permet d'annuler une réservation
      */
     deleteReservation() {
-        this.buttonReservationDelete.addEventListener("click", function() {
+        this.buttonReservationDelete.addEventListener("click", () => {
             form.reservationContainer.classList.remove("alert-success");
             form.reservationContainer.classList.add("alert-danger");
             form.reservationTitle.textContent = "Votre réservation est annulée !";

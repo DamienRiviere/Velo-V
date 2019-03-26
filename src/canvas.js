@@ -60,46 +60,46 @@ const createCanvas = {
     },
 
     draw() {
-        canvas.addEventListener('mousedown', function (e) { 
+        canvas.addEventListener('mousedown', (e) => { 
             createCanvas.mouseDown = true;                                      // Quand la bouton de la souris est down
             createCanvas.getMousePos(e);                                        // On regarde sa position
             createCanvas.drawLine(createCanvas.mouseX, createCanvas.mouseY);    // On commence à dessiner
         }, false);
 
-        canvas.addEventListener('mousemove', function (e) {
+        canvas.addEventListener('mousemove', (e) => {
             createCanvas.getMousePos(e);                                         // Quand la souris bouge 
             if (createCanvas.mouseDown === true) {                               // On regarde si le bouton est down
                 createCanvas.drawLine(createCanvas.mouseX, createCanvas.mouseY); // Et s'il l'est on dessine
             }
         }, false);
 
-        window.addEventListener('mouseup', function () {                          // Quand le bouton de la souris n'est plus down
+        window.addEventListener('mouseup', () => {                          // Quand le bouton de la souris n'est plus down
             createCanvas.mouseDown = false;                                       // La souris n'est plus down
             createCanvas.lastX = -1;                                              // La dernière position de la souris est -1 pour indiquer qu'il y a un nouveau chemin
             createCanvas.lastY = -1;                                                 
         }, false);
         
         // Même chose mais pour les tablettes et smartphones
-        canvas.addEventListener('touchstart', function (e) {
+        canvas.addEventListener('touchstart', (e) => {
             createCanvas.getTouchPos();
             createCanvas.drawLine(createCanvas.touchX, createCanvas.touchY);
             e.preventDefault();
         }, false);
 
-        canvas.addEventListener('touchmove', function (e) {
+        canvas.addEventListener('touchmove', (e) => {
             createCanvas.getTouchPos(e);
             createCanvas.drawLine(createCanvas.touchX, createCanvas.touchY);
             e.preventDefault();
         }, false);
         
-        canvas.addEventListener('touchend', function (e) {
+        canvas.addEventListener('touchend', (e) => {
             createCanvas.lastX = -1;
             createCanvas.lastY = -1;
         }, false);
     },
 
     erase() { // Pour effacer le canvas
-        document.getElementById("canvas-delete").addEventListener("click", function() {
+        document.getElementById("canvas-delete").addEventListener("click", () => {
             createCanvas.context.clearRect(0, 0, canvas.width, canvas.height); // Efface le contenu du canvas
             document.getElementById("reservation-success").style.display = "none";
         });
