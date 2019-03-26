@@ -6,7 +6,7 @@ const googleMaps = {
     map,
     form: document.getElementById("section-form"),
     reservationTimer: document.getElementById("reservation-timer"),
-    buttonReservationDelete: document.getElementById("delete-reservation"),
+    modalReservation: document.getElementById("modal-reservation"),
     reservationTitle: document.getElementById("reservation-title"),
     alertForm: document.getElementById("alert-form"),
 
@@ -49,7 +49,7 @@ const googleMaps = {
     initReservation() {
         this.form.style.display = "none";
         this.reservationTimer.style.display = "none";
-        this.buttonReservationDelete.style.display = "none";
+        this.modalReservation.style.display = "none";
         this.reservationTitle.classList.add("mb-0");
 
         if(sessionStorage.getItem("name") && sessionStorage.getItem("temps")) {

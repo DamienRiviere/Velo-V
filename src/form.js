@@ -4,6 +4,7 @@ const form = {
     buttonReservation: document.getElementById("button-reservation"), // Bouton pour faire apparaître le formulaire de réservation
     buttonReservationSuccess: document.getElementById("reservation-success"), // Bouton pour valider la réservation
     buttonReservationDelete: document.getElementById("delete-reservation"), // Bouton pour annuler la réservation en cours
+    modalReservation: document.getElementById("modal-reservation"), // Bouton pour afficher le modal de réservation
     mapLegend: document.getElementById("map-legend"), // Légende de la carte
     sectionReservation: document.getElementById("section-reservation"), // Section de la réservation
     canvasClean: document.getElementById("canvas-delete"), // Bouton pour nettoyer le canvas
@@ -104,9 +105,9 @@ const form = {
         form.reservationContainer.classList.remove("alert-danger");
         form.reservationTitle.classList.remove("text-center", "mb-0");
         form.reservationTime.style.display = "block";
-        form.buttonReservationDelete.style.display = "inline-block";
         form.reservationTitle.textContent = " Votre réservation est validée !";
         form.reservationTime.innerHTML = `Vous avez réservé 1 vélib à la station <span class="font-weight-bold">${sessionStorage.name}</span>. <br> Expire dans : <span class="font-weight-bold">${minutes} minute(s) et ${secondes} seconde(s)</span>.`
+        form.modalReservation.style.display = "inline-block";
     },
 
     /**
@@ -119,13 +120,13 @@ const form = {
             form.reservationTitle.textContent = "Votre réservation est annulée !";
             form.reservationTitle.classList.add("text-center", "mb-0");
             form.reservationTime.style.display = "none";
-            form.buttonReservationDelete.style.display = "none";
             form.alertForm.innerHTML = `
                 <i class="fas fa-exclamation-triangle"></i>
                 Veuillez sélectionner une station !
             `;
             form.alertForm.classList.add("alert-warning");
             form.alertForm.classList.remove("alert-danger");
+            form.modalReservation.style.display = "none";
 
             clearInterval(form.x);
             sessionStorage.clear();
