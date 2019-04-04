@@ -1,4 +1,4 @@
-# Projet_3 - Velo'V
+# Velo'V - Location de vélibs sur la Ville de Lyon
 Concevez une carte interactive de location de vélos
 
 Vous devez développer une application simulant la réservation de vélos (Vélo'v) dans Lyon. Ces vélos sont répartis dans de nombreuses stations dans la ville. L'utilisateur doit pouvoir en réserver un depuis son navigateur (à condition qu'il reste des vélos disponibles à la station !). La réservation sera temporairement enregistrée sur le navigateur du visiteur.
